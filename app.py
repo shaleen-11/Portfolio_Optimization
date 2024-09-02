@@ -32,6 +32,9 @@ st.title('Portfolio Optimization with Monte Carlo Simulation')
 tickers = st.text_input('Enter six stock tickers separated by commas', 'AAPL,MSFT,GOOGL,AMZN,TSLA,FB')
 tickers = [ticker.strip() for ticker in tickers.split(',')]
 
+# Define the risk-free rate
+risk_free_rate = 0.0175
+
 # Date input widgets
 start_date = st.date_input('Start Date', pd.to_datetime('2000-01-01'))
 end_date = st.date_input('End Date', pd.to_datetime('2023-06-30'))
@@ -45,10 +48,10 @@ if len(tickers) == 6:
     
     st.subheader('Monte Carlo Simulation Results')
     
-    # Use 10,000 simulations as per the notebook
-    num_portfolios = 10000
+    # Use 1,000,000 simulations as per the updated request
+    num_portfolios = 1000000
     
-    results, weights_record = monte_carlo_simulation(mean_returns, cov_matrix, num_portfolios)
+    results, weights_record = monte_carlo_simulation(mean_returns, cov_matrix, num_portfolios, risk_free_rate)
     
     max_sharpe_idx = np.argmax(results[2])
     max_sharpe_ratio = results[2,max_sharpe_idx]
