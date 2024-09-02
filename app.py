@@ -10,7 +10,7 @@ def portfolio_performance(weights, mean_returns, cov_matrix):
     return returns, std
 
 # Function to perform Monte Carlo Simulation
-def monte_carlo_simulation(mean_returns, cov_matrix, num_portfolios=10000, risk_free_rate=0.0175):
+def monte_carlo_simulation(mean_returns, cov_matrix, num_portfolios=50000, risk_free_rate=0.0175):
     num_assets = len(mean_returns)
     results = np.zeros((3, num_portfolios))
     weights_record = np.zeros((num_portfolios, num_assets))
@@ -23,19 +23,18 @@ def monte_carlo_simulation(mean_returns, cov_matrix, num_portfolios=10000, risk_
         results[1,i] = portfolio_std_dev
         results[2,i] = (portfolio_return - risk_free_rate) / portfolio_std_dev
         weights_record[i, :] = weights
-
+    
     return results, weights_record
 
 # Streamlit app
 st.title('Portfolio Optimization with Monte Carlo Simulation')
 
-# Input for stock tickers
 tickers_input = st.text_input('Enter stock tickers separated by commas', 'AAPL,MSFT,GOOGL,AMZN,TSLA,FB')
 tickers = [ticker.strip() for ticker in tickers_input.split(',')]
 
-# Date input widgets with proper default values
-start_date = st.date_input('Start Date', pd.to_datetime('2010-01-01'), min_value=pd.to_datetime('2000-01-01'), max_value=pd.to_datetime('2023-12-31'))
-end_date = st.date_input('End Date', pd.to_datetime('2023-06-30'), min_value=pd.to_datetime('2000-01-01'), max_value=pd.to_datetime('2023-12-31'))
+# Date input widgets
+start_date = st.date_input('Start Date', pd.to_datetime('2010-01-01'))
+end_date = st.date_input('End Date', pd.to_datetime('2024-12-31'))
 
 if len(tickers) >= 2:  # Ensure there are at least two tickers
     st.write("Fetching data...")
@@ -50,8 +49,8 @@ if len(tickers) >= 2:  # Ensure there are at least two tickers
         
         st.subheader('Monte Carlo Simulation Results')
         
-        # Use 10,000 simulations
-        num_portfolios = 10000
+        # Use 50,000 simulations
+        num_portfolios = 50000
         
         st.write("Running Monte Carlo simulation...")
         results, weights_record = monte_carlo_simulation(mean_returns, cov_matrix, num_portfolios)
@@ -63,5 +62,6 @@ if len(tickers) >= 2:  # Ensure there are at least two tickers
         st.write(f'Optimal Portfolio Weights for Maximum Sharpe Ratio: {max_sharpe_ratio:.2f}')
         for i, ticker in enumerate(tickers):
             st.write(f'{ticker}: {optimal_weights[i]:.2%}')
+        
 else:
     st.error('Please enter at least two stock tickers.')
