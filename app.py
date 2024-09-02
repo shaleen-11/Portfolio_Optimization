@@ -37,6 +37,9 @@ tickers = [ticker.strip() for ticker in tickers_input.split(',')]
 start_date = st.date_input('Start Date', pd.to_datetime('2000-01-01'))
 end_date = st.date_input('End Date', pd.to_datetime('2023-06-30'))
 
+# Define risk-free rate
+risk_free_rate = 0.0175
+
 if len(tickers) >= 2:  # Ensure there are at least two tickers
     st.write("Fetching data...")
     data = yf.download(tickers, start=start_date, end=end_date)['Adj Close']
@@ -54,7 +57,7 @@ if len(tickers) >= 2:  # Ensure there are at least two tickers
         num_portfolios = 10000
         
         st.write("Running Monte Carlo simulation...")
-        results, weights_record = monte_carlo_simulation(mean_returns, cov_matrix, num_portfolios)
+        results, weights_record = monte_carlo_simulation(mean_returns, cov_matrix, num_portfolios, risk_free_rate)
         
         max_sharpe_idx = np.argmax(results[2])
         max_sharpe_ratio = results[2, max_sharpe_idx]
