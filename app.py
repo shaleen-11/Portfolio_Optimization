@@ -11,7 +11,7 @@ def portfolio_performance(weights, mean_returns, cov_matrix):
     return returns, std
 
 # Function to perform Monte Carlo Simulation
-def monte_carlo_simulation(mean_returns, cov_matrix, num_portfolios=1000000, risk_free_rate=0.0175):
+def monte_carlo_simulation(mean_returns, cov_matrix, num_portfolios=10000, risk_free_rate=0.0175):
     results = np.zeros((3, num_portfolios))
     weights_record = []
     
