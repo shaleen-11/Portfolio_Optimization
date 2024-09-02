@@ -57,7 +57,7 @@ if len(tickers) >= 2:  # Ensure there are at least two tickers
         results, weights_record = monte_carlo_simulation(mean_returns, cov_matrix, num_portfolios)
         
         max_sharpe_idx = np.argmax(results[2])
-        max_sharpe_ratio = results[2,max_sharpe_idx]
+        max_sharpe_ratio = results[2, max_sharpe_idx]
         optimal_weights = weights_record[max_sharpe_idx]
         
         st.write(f'Optimal Portfolio Weights for Maximum Sharpe Ratio: {max_sharpe_ratio:.2f}')
@@ -66,8 +66,8 @@ if len(tickers) >= 2:  # Ensure there are at least two tickers
         
         # Plotting Efficient Frontier
         fig, ax = plt.subplots()
-        scatter = ax.scatter(results[1,:], results[0,:], c=results[2,:], cmap='YlGnBu', marker='o')
-        ax.scatter(results[1,max_sharpe_idx], results[0,max_sharpe_idx], c='red', marker='*', s=200)
+        scatter = ax.scatter(results[1, :], results[0, :], c=results[2, :], cmap='YlGnBu', marker='o')
+        ax.scatter(results[1, max_sharpe_idx], results[0, max_sharpe_idx], c='red', marker='*', s=200)
         ax.set_title('Efficient Frontier')
         ax.set_xlabel('Volatility')
         ax.set_ylabel('Return')
@@ -76,13 +76,13 @@ if len(tickers) >= 2:  # Ensure there are at least two tickers
         st.pyplot(fig)
         
         # Additional plot - Capital Market Line (CML)
-        sharpe_ratio = results[2,max_sharpe_idx]
-        cml_x = np.linspace(0, results[1,max_sharpe_idx], 100)
+        sharpe_ratio = results[2, max_sharpe_idx]  # Ensure this line correctly calculates the Sharpe Ratio
+        cml_x = np.linspace(0, results[1, max_sharpe_idx], 100)
         cml_y = risk_free_rate + cml_x * sharpe_ratio
         
         fig, ax = plt.subplots()
         ax.plot(cml_x, cml_y, label='Capital Market Line (CML)', color='r')
-        ax.scatter(results[1,max_sharpe_idx], results[0,max_sharpe_idx], c='red', marker='*', s=200)
+        ax.scatter(results[1, max_sharpe_idx], results[0, max_sharpe_idx], c='red', marker='*', s=200)
         ax.set_title('Capital Market Line')
         ax.set_xlabel('Volatility')
         ax.set_ylabel('Return')
