@@ -33,9 +33,9 @@ st.title('Portfolio Optimization with Monte Carlo Simulation')
 tickers_input = st.text_input('Enter stock tickers separated by commas', 'AAPL,MSFT,GOOGL,AMZN,TSLA,FB')
 tickers = [ticker.strip() for ticker in tickers_input.split(',')]
 
-# Date input widgets
-start_date = st.date_input('Start Date', pd.to_datetime('2000-01-01'))
-end_date = st.date_input('End Date', pd.to_datetime('2023-06-30'))
+# Date input widgets with proper default values
+start_date = st.date_input('Start Date', pd.to_datetime('2010-01-01'), min_value=pd.to_datetime('2000-01-01'), max_value=pd.to_datetime('2023-12-31'))
+end_date = st.date_input('End Date', pd.to_datetime('2023-06-30'), min_value=pd.to_datetime('2000-01-01'), max_value=pd.to_datetime('2023-12-31'))
 
 if len(tickers) >= 2:  # Ensure there are at least two tickers
     st.write("Fetching data...")
@@ -60,7 +60,7 @@ if len(tickers) >= 2:  # Ensure there are at least two tickers
         max_sharpe_ratio = results[2,max_sharpe_idx]
         optimal_weights = weights_record[max_sharpe_idx]
         
-        # st.write(f'Optimal Portfolio Weights for Maximum Sharpe Ratio: {max_sharpe_ratio:.2f}')
+        st.write(f'Optimal Portfolio Weights for Maximum Sharpe Ratio: {max_sharpe_ratio:.2f}')
         for i, ticker in enumerate(tickers):
             st.write(f'{ticker}: {optimal_weights[i]:.2%}')
 else:
