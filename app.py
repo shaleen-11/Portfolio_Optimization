@@ -24,6 +24,10 @@ def monte_carlo_simulation(mean_returns, cov_matrix, num_portfolios=10000, risk_
         results[1,i] = portfolio_std_dev
         results[2,i] = (portfolio_return - risk_free_rate) / portfolio_std_dev
         weights_record[i, :] = weights
+        
+        # Update progress bar
+        if i % (num_portfolios // 100) == 0:
+            st.progress(i / num_portfolios)
     
     return results, weights_record
 
@@ -38,6 +42,7 @@ start_date = st.date_input('Start Date', pd.to_datetime('2000-01-01'))
 end_date = st.date_input('End Date', pd.to_datetime('2023-06-30'))
 
 if len(tickers) >= 2:  # Ensure there are at least two tickers
+    st.write("Fetching data...")
     data = yf.download(tickers, start=start_date, end=end_date)['Adj Close']
     
     if data.empty:
@@ -52,6 +57,7 @@ if len(tickers) >= 2:  # Ensure there are at least two tickers
         # Use 10,000 simulations
         num_portfolios = 10000
         
+        st.write("Running Monte Carlo simulation...")
         results, weights_record = monte_carlo_simulation(mean_returns, cov_matrix, num_portfolios)
         
         max_sharpe_idx = np.argmax(results[2])
