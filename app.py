@@ -30,14 +30,14 @@ def monte_carlo_simulation(mean_returns, cov_matrix, num_portfolios=10000, risk_
 # Streamlit app
 st.title('Portfolio Optimization with Monte Carlo Simulation')
 
-tickers = st.text_input('Enter six stock tickers separated by commas', 'AAPL,MSFT,GOOGL,AMZN,TSLA,FB')
-tickers = [ticker.strip() for ticker in tickers.split(',')]
+tickers_input = st.text_input('Enter stock tickers separated by commas', 'AAPL,MSFT,GOOGL,AMZN,TSLA,FB')
+tickers = [ticker.strip() for ticker in tickers_input.split(',')]
 
 # Date input widgets
 start_date = st.date_input('Start Date', pd.to_datetime('2000-01-01'))
 end_date = st.date_input('End Date', pd.to_datetime('2023-06-30'))
 
-if len(tickers) == 6:
+if len(tickers) >= 2:  # Ensure there are at least two tickers
     data = yf.download(tickers, start=start_date, end=end_date)['Adj Close']
     
     if data.empty:
@@ -88,4 +88,4 @@ if len(tickers) == 6:
         st.pyplot(fig)
 
 else:
-    st.error('Please enter exactly six stock tickers.')
+    st.error('Please enter at least two stock tickers.')
