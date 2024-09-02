@@ -60,7 +60,7 @@ if len(tickers) >= 2:  # Ensure there are at least two tickers
         max_sharpe_ratio = results[2,max_sharpe_idx]
         optimal_weights = weights_record[max_sharpe_idx]
         
-        st.write(f'Optimal Portfolio Weights for Maximum Sharpe Ratio: {max_sharpe_ratio:.2f}')
+        # st.write(f'Optimal Portfolio Weights for Maximum Sharpe Ratio: {max_sharpe_ratio:.2f}')
         for i, ticker in enumerate(tickers):
             st.write(f'{ticker}: {optimal_weights[i]:.2%}')
 else:
