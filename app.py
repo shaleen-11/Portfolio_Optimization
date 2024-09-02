@@ -24,10 +24,6 @@ def monte_carlo_simulation(mean_returns, cov_matrix, num_portfolios=10000, risk_
         results[1,i] = portfolio_std_dev
         results[2,i] = (portfolio_return - risk_free_rate) / portfolio_std_dev
         weights_record[i, :] = weights
-        
-        # Update progress bar
-        if i % (num_portfolios // 100) == 0:
-            st.progress(i / num_portfolios)
     
     return results, weights_record
 
