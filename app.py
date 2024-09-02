@@ -11,18 +11,19 @@ def portfolio_performance(weights, mean_returns, cov_matrix):
     return returns, std
 
 # Function to perform Monte Carlo Simulation
-def monte_carlo_simulation(mean_returns, cov_matrix, num_portfolios=1000000, risk_free_rate=0.0175):
+def monte_carlo_simulation(mean_returns, cov_matrix, num_portfolios=20000, risk_free_rate=0.0175):
+    num_assets = len(mean_returns)
     results = np.zeros((3, num_portfolios))
-    weights_record = []
+    weights_record = np.zeros((num_portfolios, num_assets))
     
     for i in range(num_portfolios):
-        weights = np.random.random(len(mean_returns))
+        weights = np.random.random(num_assets)
         weights /= np.sum(weights)
-        weights_record.append(weights)
         portfolio_return, portfolio_std_dev = portfolio_performance(weights, mean_returns, cov_matrix)
         results[0,i] = portfolio_return
         results[1,i] = portfolio_std_dev
         results[2,i] = (portfolio_return - risk_free_rate) / portfolio_std_dev
+        weights_record[i, :] = weights
     
     return results, weights_record
 
@@ -48,8 +49,8 @@ if len(tickers) == 6:
     
     st.subheader('Monte Carlo Simulation Results')
     
-    # Use 1,000,000 simulations as per the updated request
-    num_portfolios = 1000000
+    # Use 20,000 simulations
+    num_portfolios = 20000
     
     results, weights_record = monte_carlo_simulation(mean_returns, cov_matrix, num_portfolios, risk_free_rate)
     
@@ -63,11 +64,13 @@ if len(tickers) == 6:
     
     # Plotting Efficient Frontier
     fig, ax = plt.subplots()
-    ax.scatter(results[1,:],results[0,:],c=results[2,:],cmap='YlGnBu', marker='o')
-    ax.scatter(results[1,max_sharpe_idx],results[0,max_sharpe_idx],c='red', marker='*',s=200) 
+    scatter = ax.scatter(results[1,:], results[0,:], c=results[2,:], cmap='YlGnBu', marker='o')
+    ax.scatter(results[1,max_sharpe_idx], results[0,max_sharpe_idx], c='red', marker='*', s=200)
     ax.set_title('Efficient Frontier')
     ax.set_xlabel('Volatility')
     ax.set_ylabel('Return')
+    cbar = plt.colorbar(scatter)
+    cbar.set_label('Sharpe Ratio')
     st.pyplot(fig)
     
     # Additional plot - Capital Market Line (CML)
@@ -77,10 +80,11 @@ if len(tickers) == 6:
     
     fig, ax = plt.subplots()
     ax.plot(cml_x, cml_y, label='Capital Market Line (CML)', color='r')
-    ax.scatter(results[1,max_sharpe_idx], results[0,max_sharpe_idx],c='red', marker='*', s=200)
+    ax.scatter(results[1,max_sharpe_idx], results[0,max_sharpe_idx], c='red', marker='*', s=200)
     ax.set_title('Capital Market Line')
     ax.set_xlabel('Volatility')
     ax.set_ylabel('Return')
+    ax.legend()
     st.pyplot(fig)
 
 else:
